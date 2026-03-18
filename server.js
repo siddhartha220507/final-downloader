@@ -3,7 +3,14 @@ const cors = require("cors");
 const { spawn } = require("child_process");
 
 const app = express();
-app.use(cors());
+
+// CORS Configuration - Allow requests from Vercel frontend
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"]
+}));
+
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
