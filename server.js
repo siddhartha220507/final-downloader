@@ -4,16 +4,20 @@ const { spawn } = require("child_process");
 
 const app = express();
 
-// ✅ CORS Configuration - Allow cross-origin requests
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type"]
-}));
+// ✅ GLOBAL HEADERS FIX (Most reliable)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 
-// ✅ IMPORTANT: Handle preflight OPTIONS requests
-app.options("*", cors());
+// ✅ HANDLE PREFLIGHT (Browser sends OPTIONS first)
+app.options("*", (req, res) => {
+  res.sendStatus(200);
+});
 
+app.use(cors());
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
